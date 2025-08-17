@@ -13,6 +13,13 @@ pipeline {
 
   stages {
 
+    stage('Start MySQL') {
+    steps {
+        sh 'docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=deependra -p 3306:3306 -d mysql:8'
+        sleep(time:60, unit:"SECONDS") // wait for DB
+    }
+}
+
     stage('Maven Build'){
     steps{
         sh 'mvn clean compile'
