@@ -83,7 +83,7 @@ pipeline {
          checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[ credentialsId: 'git-ssh', url: 'git@github.com/Deependra-009/Learning_Java_Full_Stack.git']])
         script {
        sh '''
-          sed -i "s/image:.*/image: deependra09\\/productservice:${VERSION}/" FSE_APP_DEPLOYMENT/Project-2(Shopping)/k8s/product-service-deployment.yaml
+          sed -i "s/image:.*/image: deependra09\\/productservice:${VERSION}/" "FSE_APP_DEPLOYMENT/Project-2(Shopping)/k8s/product-service-deployment.yaml"
         '''
           sh 'git checkout main'
           sh 'git add .'
