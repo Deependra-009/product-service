@@ -9,7 +9,7 @@ spring:
 
 
   datasource:
-    url: jdbc:mysql://${DB_HOST:13.233.128.27}:3306/productdb?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/productdb?createDatabaseIfNotExist=true
     username: root
     password: deependra
     driver-class-name : com.mysql.cj.jdbc.Driver
