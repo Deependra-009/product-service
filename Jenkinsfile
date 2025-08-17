@@ -13,60 +13,60 @@ pipeline {
 
   stages {
 
-    stage('Maven Build'){
-        steps{
-        sh 'mvn clean package  -DskipTests'
-        }
-    }
+//     stage('Maven Build'){
+//         steps{
+//         sh 'mvn clean package  -DskipTests'
+//         }
+//     }
+//
+//      stage('Run Tests') {
+//       steps {
+//         sh 'mvn test'
+//       }
+//     }
 
-     stage('Run Tests') {
-      steps {
-        sh 'mvn test'
-      }
-    }
-
-    stage('SonarQube Analysis') {
-  steps {
-    sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=http://13.233.128.27:9000/ -Dsonar.login=squ_3d3b5f2a42bac0ff157b616be8cc12a55c953aa3'
-  }
-}
-
-
-   stage('Check code coverage') {
-            steps {
-                script {
-                    def token = "squ_3d3b5f2a42bac0ff157b616be8cc12a55c953aa3"
-                    def sonarQubeUrl = "http://13.233.128.27:9000/api"
-                    def componentKey = "com.shopping:product-service"
-                    def coverageThreshold = 5.0
-
-                    def response = sh (
-                        script: "curl -H 'Authorization: Bearer ${token}' '${sonarQubeUrl}/measures/component?component=${componentKey}&metricKeys=coverage'",
-                        returnStdout: true
-                    ).trim()
-
-                    def coverage = sh (
-                        script: "echo '${response}' | jq -r '.component.measures[0].value'",
-                        returnStdout: true
-                    ).trim().toDouble()
-
-                    echo "Coverage: ${coverage}"
-
-                    if (coverage < coverageThreshold) {
-                        error "Coverage is below the threshold of ${coverageThreshold}%. Aborting the pipeline."
-                    }
-                }
-            }
-        }
+//     stage('SonarQube Analysis') {
+//   steps {
+//     sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=http://13.233.128.27:9000/ -Dsonar.login=squ_3d3b5f2a42bac0ff157b616be8cc12a55c953aa3'
+//   }
+// }
 
 
-      stage('Docker Build and Push') {
-      steps {
-          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-          sh 'docker build -t deependra09/productservice:${VERSION} .'
-          sh 'docker push deependra09/productservice:${VERSION}'
-      }
-    }
+//    stage('Check code coverage') {
+//             steps {
+//                 script {
+//                     def token = "squ_3d3b5f2a42bac0ff157b616be8cc12a55c953aa3"
+//                     def sonarQubeUrl = "http://13.233.128.27:9000/api"
+//                     def componentKey = "com.shopping:product-service"
+//                     def coverageThreshold = 5.0
+//
+//                     def response = sh (
+//                         script: "curl -H 'Authorization: Bearer ${token}' '${sonarQubeUrl}/measures/component?component=${componentKey}&metricKeys=coverage'",
+//                         returnStdout: true
+//                     ).trim()
+//
+//                     def coverage = sh (
+//                         script: "echo '${response}' | jq -r '.component.measures[0].value'",
+//                         returnStdout: true
+//                     ).trim().toDouble()
+//
+//                     echo "Coverage: ${coverage}"
+//
+//                     if (coverage < coverageThreshold) {
+//                         error "Coverage is below the threshold of ${coverageThreshold}%. Aborting the pipeline."
+//                     }
+//                 }
+//             }
+//         }
+
+
+//       stage('Docker Build and Push') {
+//       steps {
+//           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+//           sh 'docker build -t deependra09/productservice:${VERSION} .'
+//           sh 'docker push deependra09/productservice:${VERSION}'
+//       }
+//     }
 
 
      stage('Cleanup Workspace') {
